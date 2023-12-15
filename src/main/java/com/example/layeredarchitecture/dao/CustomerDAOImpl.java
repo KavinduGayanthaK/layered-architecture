@@ -2,9 +2,13 @@ package com.example.layeredarchitecture.dao;
 
 import com.example.layeredarchitecture.db.DBConnection;
 import com.example.layeredarchitecture.model.CustomerDTO;
+import com.example.layeredarchitecture.view.tdm.CustomerTM;
+import javafx.scene.control.TableView;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class CustomerDAOImpl {
     public ArrayList<CustomerDTO> getAlCustomer() throws SQLException, ClassNotFoundException {
@@ -62,5 +66,10 @@ public class CustomerDAOImpl {
         } else {
             return "C00-001";
         }
+    }
+    public String getLastCustomerId(TableView<CustomerTM> tblCustomers) {
+        List<CustomerTM> tempCustomersList = new ArrayList<>(tblCustomers.getItems());
+        Collections.sort(tempCustomersList);
+        return tempCustomersList.get(tempCustomersList.size() - 1).getId();
     }
 }

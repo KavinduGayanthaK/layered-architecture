@@ -189,8 +189,8 @@ public class ManageCustomersFormController {
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
         CustomerDAOImpl customerDAO = new CustomerDAOImpl();
-        boolean existCustomer = customerDAO.existCustomer(id);
-        return existCustomer;
+        return customerDAO.existCustomer(id);
+
     }
 
     public void btnDelete_OnAction(ActionEvent actionEvent) {
@@ -219,15 +219,13 @@ public class ManageCustomersFormController {
     private String generateNewId() {
         try {
             CustomerDAOImpl customerDAO = new CustomerDAOImpl();
-            String generateNewId = customerDAO.generateNewId();
-            txtCustomerId.setText(generateNewId);
+            return customerDAO.generateNewId();
 
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Failed to generate a new id " + e.getMessage()).show();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
 
         if (tblCustomers.getItems().isEmpty()) {
             return "C00-001";
@@ -240,9 +238,8 @@ public class ManageCustomersFormController {
     }
 
     private String getLastCustomerId() {
-        List<CustomerTM> tempCustomersList = new ArrayList<>(tblCustomers.getItems());
-        Collections.sort(tempCustomersList);
-        return tempCustomersList.get(tempCustomersList.size() - 1).getId();
+        CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+       return customerDAO.getLastCustomerId(tblCustomers);
     }
 
 }
