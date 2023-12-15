@@ -144,13 +144,12 @@ public class ManageCustomersFormController {
                 if (existCustomer(id)) {
                     new Alert(Alert.AlertType.ERROR, id + " already exists").show();
                 }
-                Connection connection = DBConnection.getDbConnection().getConnection();
-                PreparedStatement pstm = connection.prepareStatement("INSERT INTO Customer (id,name, address) VALUES (?,?,?)");
-                pstm.setString(1, id);
-                pstm.setString(2, name);
-                pstm.setString(3, address);
-                pstm.executeUpdate();
-
+                CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+                CustomerDTO customerDTO = new CustomerDTO(id, name, address);
+                boolean saveCustomer = customerDAO.saveCustomer(customerDTO);
+                if (saveCustomer) {
+                    new Alert(Alert.AlertType.INFORMATION,"Saved successfully").show();
+                }
                 tblCustomers.getItems().add(new CustomerTM(id, name, address));
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Failed to save the customer " + e.getMessage()).show();
@@ -165,12 +164,13 @@ public class ManageCustomersFormController {
                 if (!existCustomer(id)) {
                     new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
                 }
-                Connection connection = DBConnection.getDbConnection().getConnection();
-                PreparedStatement pstm = connection.prepareStatement("UPDATE Customer SET name=?, address=? WHERE id=?");
-                pstm.setString(1, name);
-                pstm.setString(2, address);
-                pstm.setString(3, id);
-                pstm.executeUpdate();
+
+                CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+                boolean b = customerDAO.updateCustomer(new CustomerDTO(id, name, address));
+                if (b) {
+                    new Alert(Alert.AlertType.INFORMATION,"Update successfully").show();
+                }
+
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Failed to update the customer " + id + e.getMessage()).show();
             } catch (ClassNotFoundException e) {
